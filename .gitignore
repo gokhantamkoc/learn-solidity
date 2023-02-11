@@ -1,0 +1,17 @@
+# Mac OS
+.DS_Store
+
+# Jetbrains
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Node.js and NPM
+package-lock.json
+node_modules/
+
+# Solidity Development
+coverage/
+cache/
+artifacts/
