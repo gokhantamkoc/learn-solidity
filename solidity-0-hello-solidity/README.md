@@ -53,7 +53,7 @@ module.exports = {
 $ npm install --save-dev @nomiclabs/hardhat-waffle @nomiclabs/hardhat-ethers ethereum-waffle chai  ethers solidity-coverage
 ```
 
-> **NOTE:** Packages' (you add at step 8) explanations can be found [here](#hardhat-plugins)
+> **NOTE:** Packages' (you add at step 8) explanations can be found [here](#appendix-a-hardhat-plugins)
 
 9. Let's modify `package.json` to use `hardhat` features. Go to `scripts` section. Add below commands:
 
@@ -76,7 +76,7 @@ module.exports = {
 };
 ```
 
-11. Let's implement the `helloworld.sol`.
+11. Let's implement the `HelloWorldContract.sol`.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -123,3 +123,12 @@ contract HelloWorldContract {
 ```
 
 In the next lesson, you will develop a smart contract and its test cases.
+
+## **APPENDIX A: Hardhat Plugins**
+
+1. `@nomiclabs/hardhat-waffle`: This is a Hardhat plugin that enables waffle support.
+2. `@nomiclabs/hardhat-ethers`: This is a Hardhat plugin that enables ethers support.
+3. `ethereum-waffle`: Waffle is a Solidity testing library. It allows you to write tests for your contracts with JavaScript.
+4. `chai`: Chai is an assertion library and provides functions like expect.
+5. `ethers`: This is a popular Ethereum client library. It allows you to interface with blockchains that implement the Ethereum API.
+6. `solidity-coverage`: This library gives you coverage reports on unit tests with the help of Istanbul.
