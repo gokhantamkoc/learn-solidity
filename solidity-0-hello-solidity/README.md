@@ -122,8 +122,6 @@ contract HelloWorldContract {
 			-> HelloWorldContract.json
 ```
 
-In the next lesson, you will develop a smart contract and its test cases.
-
 ## **APPENDIX A: Hardhat Plugins**
 
 1. `@nomiclabs/hardhat-waffle`: This is a Hardhat plugin that enables waffle support.
