@@ -1,7 +1,7 @@
 # Storage Factory
 
 - Importing other Contracts
-- Deploying other Contracts
+- Deploying Contracts from other contracts using new keyword.
 - Interacting with other Contracts
 
 ## Solidity Features

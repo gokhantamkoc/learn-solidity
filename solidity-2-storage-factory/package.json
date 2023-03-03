@@ -7,7 +7,7 @@
     "build": "hardhat compile",
 		"test": "hardhat test",
 		"test:coverage": "hardhat coverage",
-		"deploy:local": "hardhat run --network localhost scripts/deploySimpleStorageContract.js",
+		"deploy:local": "hardhat run --network localhost scripts/deployContracts.js",
 		"local-testnet": "hardhat node"
   },
   "keywords": [],
