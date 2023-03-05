@@ -15,3 +15,6 @@ node_modules/
 coverage/
 cache/
 artifacts/
+
+# Solidity Deps
+.deps/
