@@ -1,0 +1,25 @@
+{
+  "name": "solidity-5-simple-storage-deployment-script-with-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "hardhat compile",
+		"test": "hardhat test",
+		"test:coverage": "hardhat coverage",
+		"deploy:local": "hardhat run --network localhost scripts/deployContracts.js",
+		"local-testnet": "hardhat node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "chai": "^4.3.7",
+    "ethereum-waffle": "^4.0.9",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.12.7",
+    "solidity-coverage": "^0.8.2"
+  }
+}

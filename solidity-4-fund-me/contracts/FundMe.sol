@@ -5,11 +5,10 @@ pragma solidity ^0.8.0;
 import "./PriceConvertor.sol";
 
 contract FundMe {
-
     using PriceConvertor for uint256;
 
     address[] public funders;
-    mapping (address => uint256) public addressAmount;
+    mapping(address => uint256) public addressAmount;
 
     uint256 public minimumUSD = 50 * 1e18;
 
@@ -19,13 +18,16 @@ contract FundMe {
      * MODIFIERS
      */
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         require(owner == msg.sender, "you are not allowed to execute withdraw");
         _;
     }
 
-    modifier fundAmountLimit {
-        require(msg.value.getConversionRate() > minimumUSD, "did not send enough!"); // 1e18 == 1 * 10 ** 18
+    modifier fundAmountLimit() {
+        require(
+            msg.value.getConversionRate() > minimumUSD,
+            "did not send enough!"
+        ); // 1e18 == 1 * 10 ** 18
         _;
     }
 
@@ -67,19 +69,22 @@ contract FundMe {
         //// payable(msg.sender) > type of payable_address
         //// transfer method is capped at X gas. If the gas cap X is passed, the withdraw will not happen and send will return boolean false.
         bool result = payable(msg.sender).send(address(this).balance);
-        require(result, "could not withdraw the funds, because gas cap reached.");
+        require(
+            result,
+            "could not withdraw the funds, because gas cap reached."
+        );
         // 3. call => this is recommended by solidity community
         //// msg.sender > type of address
         //// payable(msg.sender) > type of payable_address
-        //// call method is not capped. 
+        //// call method is not capped.
         //// It will either forward all gas or lets you set the gas.
         //// It will return a false boolean, if the withdraw fails.
-        (result,) = payable(msg.sender).call{value: address(this).balance}("");
+        (result, ) = payable(msg.sender).call{value: address(this).balance}("");
         require(result, "could not withdraw the funds.");
     }
 
-    // What happens if someone sends this contract ETH or other cryptocurrency 
-    // without calling fund()?: 
+    // What happens if someone sends this contract ETH or other cryptocurrency
+    // without calling fund()?:
     // There are two special functions to handle this situation:
     // receive() and fallback()
 

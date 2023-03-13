@@ -1,5 +1,36 @@
 # **Lesson 0: Hello Solidity**
 
+## **Requirements for the Development Environment**
+
+### IDE
+
+- VS Code
+- Hardhat's Solidity VS Code extension
+- Prettier VS Code extension
+
+### Configuring VS Code
+
+- Hit `CTRL` + `Shift` + `P`.
+- Type User Settings and press `Open User Settings (JSON)` command.
+- Add this to the end of the settings json file:
+
+```JSON
+{
+	...,
+    "[solidity]": {
+        "editor.defaultFormatter": "NomicFoundation.hardhat-solidity"
+    },
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+	},
+    "editor.formatOnSave": true
+}
+```
+
+### SDKs
+
+- nodejs
+
 ## **Creating a Solidity Project with Hardhat**
 
 The most powerful tool to create a solidity development environment is `npm`. Therefore, I will always prepare the lessons with NPM projects.
@@ -15,8 +46,9 @@ X.Y.Z
 ```
 
 Now let's start creating a npm project:
+
 1. Create an empty folder and name it `hello-solidity`. This is folder is the project placeholder.
-2. Open a terminal in your `hello-solidity` folder. 
+2. Open a terminal in your `hello-solidity` folder.
 3. Execute `npm init -y` and `npm` creates a npm project for you. Under `hello-solidity` you should see file named `package.json`.
 
 ```json
@@ -33,6 +65,7 @@ Now let's start creating a npm project:
   "license": "ISC"
 }
 ```
+
 4. Let's install `hardhat` for solidity development. Run `npx hardhat` command. This is `hardhat`'s `init` command.
 5. `hardhat` will ask you which type of project to create. Select `Create an empty hardhat.config.js` option. When you executed the command, you should have a new file in your project called `hardhat.config.js`.
 
@@ -42,11 +75,12 @@ module.exports = {
   solidity: "0.8.17",
 };
 ```
+
 6. Your `solidity` project initialization is not complete. `hardhat` just added a config file. Run `npm install --save-dev hardhat`.
 7. You are halfway done. Let's create some folders under `hello-solidity`.
-	- contracts
-	- scripts
-	- test
+   - contracts
+   - scripts
+   - test
 8. After creating your folders. Let's add more `npm` packages.
 
 ```shell
@@ -67,7 +101,7 @@ $ npm install --save-dev @nomiclabs/hardhat-waffle @nomiclabs/hardhat-ethers eth
 
 ```javascript
 require("@nomiclabs/hardhat-waffle");
-require('solidity-coverage');
+require("solidity-coverage");
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */

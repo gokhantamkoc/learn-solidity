@@ -10,20 +10,19 @@ library PriceConvertor {
         // To call a outside contract we require:
         // 1. Contract ABI
         // 2. Contract Address: (for ETH/USD in Sepolia Test Net: 0x694AA1769357215DE4FAC081bf1f309aDC325306)
-        AggregatorV3Interface ethusdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        (
-            ,
-            int price,
-            ,
-            ,
-        ) = ethusdPriceFeed.latestRoundData();
-        // price will be XXXX.XXXXXXXX so 
+        AggregatorV3Interface ethusdPriceFeed = AggregatorV3Interface(
+            0x694AA1769357215DE4FAC081bf1f309aDC325306
+        );
+        (, int price, , , ) = ethusdPriceFeed.latestRoundData();
+        // price will be XXXX.XXXXXXXX so
         return uint256(price * 1e10);
     }
 
-    function getConversionRate(uint256 ethAmount) internal view returns (uint256) {
+    function getConversionRate(
+        uint256 ethAmount
+    ) internal view returns (uint256) {
         uint256 ethPrice = getPrice();
-        uint256 ethAmountInUSD = ethPrice * ethAmount / 1e18;
+        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1e18;
         return ethAmountInUSD;
     }
 }
