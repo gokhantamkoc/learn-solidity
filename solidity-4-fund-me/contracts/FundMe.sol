@@ -46,7 +46,7 @@ contract FundMe {
         // and send remaining gas back
     }
 
-    function withdraw() public {
+    function withdraw() public onlyOwner {
         uint256 amountToWithdraw = 0;
         for (uint256 idx = 0; idx < funders.length - 1; idx++) {
             amountToWithdraw += addressAmount[funders[idx]];
