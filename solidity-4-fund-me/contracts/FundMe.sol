@@ -2,55 +2,105 @@
 
 pragma solidity ^0.8.0;
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./PriceConvertor.sol";
 
 contract FundMe {
 
-    // AggregatorV3Interface internal priceFeed;
+    using PriceConvertor for uint256;
 
-    // /**
-    //  * Network: Sepolia
-    //  * Aggregator: ETH/USD
-    //  * Address: 0xcf4be57aa078dc7568c631be7a73adc1cda992f8
-    //  */
-    // constructor() {
-    //     priceFeed = AggregatorV3Interface(
-    //         0xcf4be57aa078dc7568c631be7a73adc1cda992f8
-    //     );
-    // }
+    address[] public funders;
+    mapping (address => uint256) public addressAmount;
 
-    uint256 public minimumUSD = 50;
+    uint256 public minimumUSD = 50 * 1e18;
 
-    function fund() public payable {
+    address public owner;
+
+    /**
+     * MODIFIERS
+     */
+
+    modifier onlyOwner {
+        require(owner == msg.sender, "you are not allowed to execute withdraw");
+        _;
+    }
+
+    modifier fundAmountLimit {
+        require(msg.value.getConversionRate() > minimumUSD, "did not send enough!"); // 1e18 == 1 * 10 ** 18
+        _;
+    }
+
+    constructor() {
+        // this will get executed during the deployment.
+        // so the owner of this contract will be the deployer.
+        owner = msg.sender;
+    }
+
+    function fund() public payable onlyOwner fundAmountLimit {
         // Want to be able to set a minimum fund amount
         // 1. How do we send ETH to this contract
-        require(getConversionRate(msg.value) > minimumUSD, "Did not send enough!"); // 1e18 == 1 * 10 ** 18
+        funders.push(msg.sender);
+        addressAmount[msg.sender] += msg.value;
         // msg.value is in wei so we require call oracles to convert the wei to fiat
 
         // require reverts action done before itself
         // and send remaining gas back
     }
 
-    function getPrice() public view returns (uint256) {
-        // In this function we are calling a contract that is outside of our project
-        // To call a outside contract we require:
-        // 1. Contract ABI
-        // 2. Contract Address: (for ETH/USD in Sepolia Test Net: 0x694AA1769357215DE4FAC081bf1f309aDC325306)
-        AggregatorV3Interface ethusdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        (
-            ,
-            int price,
-            ,
-            ,
-        ) = ethusdPriceFeed.latestRoundData();
-        // price will be XXXX.XXXXXXXX so 
-        return uint256(price * 1e10);
+    function withdraw() public {
+        uint256 amountToWithdraw = 0;
+        for (uint256 idx = 0; idx < funders.length - 1; idx++) {
+            amountToWithdraw += addressAmount[funders[idx]];
+            addressAmount[funders[idx]] = 0;
+        }
+        // reset funders array
+        funders = new address[](0);
+        // withdraw all funds
+        // TODO There are 3 different ways to withdraw funds from this contract
+        // 1. transfer
+        //// msg.sender > type of address
+        //// payable(msg.sender) > type of payable_address
+        //// transfer method is capped at X gas. If the X is passed, the withdraw will not happen and transfer throws an error.
+        // require();
+        payable(msg.sender).transfer(address(this).balance);
+        // 2. send
+        //// msg.sender > type of address
+        //// payable(msg.sender) > type of payable_address
+        //// transfer method is capped at X gas. If the gas cap X is passed, the withdraw will not happen and send will return boolean false.
+        bool result = payable(msg.sender).send(address(this).balance);
+        require(result, "could not withdraw the funds, because gas cap reached.");
+        // 3. call => this is recommended by solidity community
+        //// msg.sender > type of address
+        //// payable(msg.sender) > type of payable_address
+        //// call method is not capped. 
+        //// It will either forward all gas or lets you set the gas.
+        //// It will return a false boolean, if the withdraw fails.
+        (result,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(result, "could not withdraw the funds.");
     }
 
-    function getConversionRate(uint256 ethAmount) public view returns (uint256) {
-        uint256 ethPrice = getPrice();
-        uint256 ethAmountInUSD = ethPrice * ethAmount / 1e18;
-        return ethAmountInUSD;
+    // What happens if someone sends this contract ETH or other cryptocurrency 
+    // without calling fund()?: 
+    // There are two special functions to handle this situation:
+    // receive() and fallback()
+
+    // receive() and fallback() special function should have external and payable keywords.
+    // receive() and fallback() can only be defined exactly one for each contract.
+
+    //        is msg.data empty?
+    //             /       \
+    //           yes        no
+    //           /           \
+    //     has receive()?   fallback()
+    //        /        \
+    //      yes        no
+    //      /           \
+    //    receive()     fallback()
+
+    receive() external payable {
+        fund();
     }
 
+    fallback() external payable {
+        fund();
+    }
 }
