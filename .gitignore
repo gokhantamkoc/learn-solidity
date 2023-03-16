@@ -16,5 +16,7 @@ coverage/
 cache/
 artifacts/
 
-# Solidity Deps
+# Solidity
+*.abi
+*.bin
 .deps/
