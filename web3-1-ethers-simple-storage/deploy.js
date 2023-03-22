@@ -43,6 +43,16 @@ async function deployContractWithTransactionData(wallet) {
      console.log(sentTxResponse);
 }
 
+async function interactWithContract(contract) {
+     console.log("interacting with the contract...");
+     const transactionResponse = await contract.addPerson("Gökhan", "4");
+     const transactionReceipt = await transactionResponse.wait(1);
+     const personFavoriteNumber = await contract.getFavoriteNumberByName(
+          "Gökhan"
+     );
+     console.log(`Gökhan's favorite number is ${personFavoriteNumber}`);
+}
+
 async function main() {
      // test network http://127.0.0.1:7545
      let testNetwork = "http://127.0.0.1:7545";
@@ -52,21 +62,21 @@ async function main() {
 
      // load wallet
      const wallet = new ethers.Wallet(
-          "c2c2b7d6546524bf8fee1e075d819336191111352db1d3d884e0785a4cb2f39d", // private key of the wallet
+          "c409205537a7ace93400f518f3a5aa068614032337940374390aa2e8c17759a9", // private key of the wallet
           provider
      );
 
      const deployWith = "CONTRACT_FACTORY";
 
      console.log("Deploying contract, please wait...");
+     let contract;
      if (deployWith === "CONTRACT_FACTORY") {
-          let contract = await deployContractWithContractFactory(wallet);
-          await contract.addPerson("Gökhan", 4);
-          let result = await contract.getFavoriteNumberByName("Gökhan");
-          console.log(result);
+          contract = await deployContractWithContractFactory(wallet);
      } else {
           deployContractWithTransactionData(wallet);
      }
+
+     interactWithContract(contract);
 }
 
 main()
