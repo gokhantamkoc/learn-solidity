@@ -19,9 +19,11 @@ async function deployContractWithContractFactory(wallet) {
      // console.log("Here is the deployment transaction");
      // console.log(contract.deployTransaction);
 
-     const transactionReceipt = await contract.deployTransaction.wait(1);
+     await contract.deployTransaction.wait(1);
      // console.log("Here is the transaction receipt");
      // console.log(transactionReceipt);
+     const favoriteNumber = await contract.getFavoriteNumberByName("Gökhan");
+     console.log(favoriteNumber);
 
      return contract;
 }
@@ -44,39 +46,43 @@ async function deployContractWithTransactionData(wallet) {
 }
 
 async function interactWithContract(contract) {
-     console.log("interacting with the contract...");
-     const transactionResponse = await contract.addPerson("Gökhan", "4");
-     const transactionReceipt = await transactionResponse.wait(1);
-     const personFavoriteNumber = await contract.getFavoriteNumberByName(
+     if (contract === null) {
+          console.log("Contract is null");
+          return;
+     }
+     console.log("Contract Interaction");
+     const txResponse = await contract.addPerson("Gökhan", "4");
+     const gokhanFavoriteNumber = await contract.getFavoriteNumberByName(
           "Gökhan"
      );
-     console.log(`Gökhan's favorite number is ${personFavoriteNumber}`);
+     console.log(`Gökhan's favorite number is ${gokhanFavoriteNumber}`);
+     console.log(txResponse);
 }
 
 async function main() {
      // test network http://127.0.0.1:7545
      let testNetwork = "http://127.0.0.1:7545";
+     walletPrivateKey =
+          "398eddb834dfa5d722665e431a6ee9841b9afee6e8ebca4a415349cd51cf4339";
 
      // initialize provider
      const provider = new ethers.providers.JsonRpcProvider(testNetwork);
 
      // load wallet
      const wallet = new ethers.Wallet(
-          "c409205537a7ace93400f518f3a5aa068614032337940374390aa2e8c17759a9", // private key of the wallet
+          walletPrivateKey, // private key of the wallet
           provider
      );
 
      const deployWith = "CONTRACT_FACTORY";
 
      console.log("Deploying contract, please wait...");
-     let contract;
      if (deployWith === "CONTRACT_FACTORY") {
-          contract = await deployContractWithContractFactory(wallet);
+          let contract = await deployContractWithContractFactory(wallet);
+          await interactWithContract(contract);
      } else {
           deployContractWithTransactionData(wallet);
      }
-
-     interactWithContract(contract);
 }
 
 main()

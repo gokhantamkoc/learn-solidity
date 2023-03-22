@@ -1,9 +1,5 @@
 [
-     {
-          "inputs": [],
-          "stateMutability": "nonpayable",
-          "type": "constructor"
-     },
+     { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
      {
           "inputs": [
                { "internalType": "string", "name": "_name", "type": "string" },
